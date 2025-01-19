@@ -26,6 +26,41 @@ pub use crate::up_core_api::usubscription::{
 
 use crate::{UStatus, UUri};
 
+// Tracks information for the SubscriptionCache
+pub struct SubscriptionInformation {
+    pub topic: UUri,
+    pub subscriber: SubscriberInfo,
+    pub status: SubscriptionStatus,
+    pub attributes: SubscribeAttributes,
+    pub config: EventDeliveryConfig,
+}
+
+impl Eq for SubscriptionInformation {}
+
+impl PartialEq for SubscriptionInformation {
+    fn eq(&self, other: &Self) -> bool {
+        self.subscriber == other.subscriber
+    }
+}
+
+impl Hash for SubscriptionInformation {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.subscriber.hash(state);
+    }
+}
+
+impl Clone for SubscriptionInformation {
+    fn clone(&self) -> Self {
+        Self {
+            topic: self.topic.clone(),
+            subscriber: self.subscriber.clone(),
+            status: self.status.clone(),
+            attributes: self.attributes.clone(),
+            config: self.config.clone(),
+        }
+    }
+}
+
 impl Hash for SubscriberInfo {
     /// Creates a hash value based on the URI property.
     ///
